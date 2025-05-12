@@ -1,0 +1,45 @@
+.hero-split {
+    display: flex;
+    align-items: center; /* Vertically align items */
+    min-height: 500px; /* Adjust as needed */
+    width: 100%;
+}
+
+.hero-text {
+    flex: 1;
+    padding: 20px;
+    text-align: left;
+}
+
+.hero-image {
+    flex: 1;
+    padding: 20px;
+}
+
+.hero-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Ensure image covers the area */
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff; /* Example button color */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+/* Responsive design (example for smaller screens) */
+@media (max-width: 768px) {
+    .hero-split {
+        flex-direction: column; /* Stack text and image */
+        text-align: center;
+    }
+
+    .hero-text, .hero-image {
+        width: 100%;
+    }
+}

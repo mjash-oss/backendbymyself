@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="block1">
+    <h1>Hello {{name}}!</h1>
+    <p>Here is your daily puzzle: </p>
+    {{puzzle}}
+
+     <form method="POST" action="{{ url_for('check_answer') }}">
+        <label for="answer">Your Answer:</label>
+        <input type="text" id="answer" name="answer">
+        <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+        <input type="submit" value="Check Answer">
+    </form>
+
+    {% if feedback %}
+    <p>{{ feedback }}</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('index') }}">Go back to the homepage</a></p>
+</div>
+{% endblock %}
+
