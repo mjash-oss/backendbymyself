@@ -3,17 +3,25 @@
 <div class="block1">
     <h1>Hello {{name}}!</h1>
     <p>Here is your daily puzzle: </p>
-    {{puzzle}}
-
-     <form method="POST" action="{{ url_for('check_answer') }}">
-        <label for="answer">Your Answer:</label>
-        <input type="text" id="answer" name="answer">
-        <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-        <input type="submit" value="Check Answer">
+    <form action="{{ url_for('check_answer') }}" method="POST">
+        <p>{{ puzzle }}</p>
+        <input type="text" name="answer" placeholder="Your answer">
+         <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+        <input type="submit" value="Submit Answer">
+        {% if feedback %}
+            <p>{{ feedback }}</p>
+        {% endif %}
+        {% if hint %}
+            <p><a href="{{ url_for('hint') }}">Show Hint</a></p>
+        {% endif %}
     </form>
 
-    {% if feedback %}
-    <p>{{ feedback }}</p>
+    {% if correct_count is not none %}
+        <p>Correct Puzzles: {{ correct_count }}</p>
+    {% endif %}
+
+    {% if time_taken %}
+        <p>Time taken for the last correct answer: {{ time_taken }}</p>
     {% endif %}
 
     <p><a href="{{ url_for('index') }}">Go back to the homepage</a></p>
