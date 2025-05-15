@@ -25,21 +25,305 @@
 
 .button {
     display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff; /* Example button color */
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    background-color: black; /* Example button color */
     color: white;
     text-decoration: none;
     border-radius: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Remove transform  */
+    position: relative; /* Important for positioning particles  */
+    overflow: hidden; 
 }
 
-/* Responsive design (example for smaller screens) */
+border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Remove transform  */
+    position: relative; /* Important for positioning particles  */
+    overflow: hidden; 
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.dashboard-container {
+    display: flex; /* Use Flexbox for the main layout */
+    flex-directio: column;
+    min-height: 100vh; /* Ensure full viewport height */
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: row; /* Horizontal layout for top bar */
+    justify-content: space-between; /* Space out items */
+    align-items: top; /* Vertically center items */
+    background-color: white;
+    color: black; /* Changed text color to black */
+    padding: 10px 20px; /* Adjusted padding */
+    width: 50%; /* Full width */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for better separation */
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.sidebar-content{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+}
+
+.sidebar-heading {
+    font-size: 1.5rem;
+    margin-bottom: 0; /* Removed bottom margin */
+    margin-right: 0; /* Add right margin to heading */
+    padding-left: 0;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Horizontal menu */
+    flex-direction: row;
+    align-items: top;
+}
+
+.sidebar-item {
+    padding: 5px 8px;
+    transition: background-color 0.3s ease;
+    //width: 100%;
+}
+
+.sidebar-item:hover {
+    background-color: #f0f0f0; /* Slightly darker on hover */
+    //border: 0.5px solid #ddd; 
+    //border-color: black 
+    border-radius: 5px;
+}
+
+.sidebar-item.active {
+    background-color: #3498db; /* Active item background */
+    border-radius: 5px; 
+}
+
+.sidebar-link {
+    color: black;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: block; /* Make the link fill the item */
+    //width: 100%;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1; /* Allow the main content to take up remaining space */
+    padding: 40px;
+    display: flex;
+    flex-direction: column; /* Stack content vertically by default */
+    align-items: flex-start; /* Stretch items to container width */
+}
+
+.top-right-button-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.main-content h1{
+    margin-bottom: 20px;
+    margin-left: 0px;
+    //margin-top: -10px; 
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.content-area{
+    width: 100%;
+    display: flex; /* Use Flexbox to position items */
+    flex-direction: column;
+    //align-items: flex-start;
+}
+
+/* Timer Styles */
+//.timer-display {
+//    font-size: 2rem;
+//    //margin-bottom: 30px;
+//    margin-left: 0px; 
+//    margin-top: 0px;
+//    color: black;
+//    padding: 10px;
+//    background-color: white;
+//    border-radius: 10px;
+//    text-align: center;
+//    padding: 20px; 
+//    //width: 80%; 
+//    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//}
+
+/* Puzzle Card Styles */
+.puzzle-card {
+    background-color: white;
+    padding: 20px;
+    margin-left: 0; 
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.puzzle-text {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.puzzle-question {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* Form Styles */
+.answer-input {
+    padding: 12px 15px;
+    font-size: 1.1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: calc(100% - 140px);
+    max-width: 400px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.answer-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.feedback-text {
+    margin-top: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.feedback-text.correct {
+    color: green;
+}
+
+.feedback-text.incorrect {
+    color: red;
+}
+
+.hint-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #3498db;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.hint-link:hover {
+    text-decoration: underline;
+}
+
+/* Stats Card Styles */
+.stats-card {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.time-taken {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #7f8c8d;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .hero-split {
-        flex-direction: column; /* Stack text and image */
+    .dashboard-container {
+        //display: flex;
+        flex-direction: column; /* Stack sidebar and main content on small screens */
+        //min-height: 100vh; 
+    }
+
+    .sidebar {
+        width: 100%; /* Sidebar takes full width on small screens */
+        padding: 10px 0;
+        //background-color: #2c3e50;
+        //color: white;
+        //display: flex;
+        flex-direction: column;
+        align-items: center;
+        //margin-top: -50px;
+    }
+    .sidebar-menu{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar-item {
+        width: 100%;
         text-align: center;
     }
 
-    .hero-text, .hero-image {
-        width: 100%;
+@media (min-width: 769px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        flex-direction: row; /* Arrange items in a row */
+        justify-content: space-between; /* Space between left and right sections */
+        align-items: flex-start; /* Align items to the start (top in this case) */
+    }
+
+    .content-area {
+        width: 40%; /* Approx 40% width for left column */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .right-section {
+        width: 58%; /* Approx 60% width for right column */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .top-right-button-container{
+        justify-content: flex-end;
+    }
+    //.sidebar-heading {
+    //    font-size: 1.5rem;
+    //}
+
+    .timer-display {
+        margin-left: 0;
+        margin-top: 0;
+    }
+
+    .puzzle-card {
+        margin-left: 500px; /* Reset left margin */
+        margin-right: auto;
+        margin-top: 0;
     }
 }
+</style>

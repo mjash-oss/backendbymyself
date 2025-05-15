@@ -1,30 +1,156 @@
 {% extends "layout.html" %}
 {% block body %}
-<div class="block1">
-    <h1>Hello {{name}}!</h1>
-    <p>Here is your daily puzzle: </p>
-    <form action="{{ url_for('check_answer') }}" method="POST">
-        <p>{{ puzzle }}</p>
-        <input type="text" name="answer" placeholder="Your answer">
-         <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
-        <input type="submit" value="Submit Answer">
-        {% if feedback %}
-            <p>{{ feedback }}</p>
-        {% endif %}
-        {% if hint %}
-            <p><a href="{{ url_for('hint') }}">Show Hint</a></p>
-        {% endif %}
-    </form>
+<div class="dashboard-container">
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active">
+                    <a href="#" class="sidebar-link">Dashboard</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="/hello" class="sidebar-link">Analytics</a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">Settings</a>
+                </li>
+                 <li class="sidebar-item">
+                    <a href="/" class="sidebar-link">Homepage</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="content-area"></div>
+            <h1>Hello {{name}}!</h1>
+            <p>This is your puzzles page, please be patient as we continually work to improve user experience. The timer and counter had to be removed for the time being. We recognize that the layout of this page requires improvement, and we are working to do so. However, improving the functionality of the site will be the first priority. The timer and counter will be readded on the analytics page.</p>
+            <div id="live-timer" class="timer-display">0</div>
+            <div class="puzzle-card">
+                <p class="puzzle-question">{{ puzzle }}</p>
+                <form action="{{ url_for('check_answer') }}" method="POST">
+                    <input type="text" name="answer" placeholder="Your answer" class="answer-input">
+                    <input type="hidden" name="correct_answer" value="{{ correct_answer }}">
+                    <input type="submit" value="Submit Answer" class="button submit-button">
+                    {% if feedback %}
+                        <p class="feedback-text {{ 'correct' if 'Correct' in feedback else 'incorrect' }}">{{ feedback }}</p>
+                    {% endif %}
+                    {% if hint %}
+                        <p><a href="{{ url_for('hint') }}" class="hint-button">Show Hint</a></p>
+                    {% endif %}
+                </form>
+            </div>
+            {% if time_taken %}
+                <p class="time-taken">Time taken for the last correct answer: {{ time_taken }}</p>
+            {% endif %}
+            <div class="stepper-container">
+                <div class="step" id="step-1"><div class="circle"></div><div class="checkmark"></div></div>
+                <div class="step" id="step-2"><div class="circle"></div><div class="checkmark"></div></div>
+                <div class="step" id="step-3"><div class="circle"></div><div class="checkmark"></div></div>
+                <div class="step" id="step-4"><div class="circle"></div><div class="checkmark"></div></div>
+                <div class="step" id="step-5"><div class="circle"></div><div class="checkmark"></div></div>
+            </div>
+        </div>
+    </div>
+</div> 
 
-    {% if correct_count is not none %}
-        <p>Correct Puzzles: {{ correct_count }}</p>
-    {% endif %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let startTime = Date.now();
+        const timerDisplay = document.getElementById('live-timer');
+        const correctCount = {{ correct_count | default(0) }};
+        const steps = document.querySelectorAll('.step');
+        const buttons = document.querySelectorAll('.button'); // Select ALL buttons
 
-    {% if time_taken %}
-        <p>Time taken for the last correct answer: {{ time_taken }}</p>
-    {% endif %}
+        function updateTimer() {
+            const currentTime = Date.now();
+            const elapsedTime = Math.floor((currentTime - startTime) / 1000); // Calculate seconds
+            timerDisplay.textContent = `Time Elapsed: ${elapsedTime} seconds`;
+        }
 
-    <p><a href="{{ url_for('index') }}">Go back to the homepage</a></p>
-</div>
+        for (let i = 0; i < steps.length; i++) {
+            if (i < correctCount) {
+                steps.item(i).classList.add('completed');
+                steps.item(i).querySelector('.circle').textContent = '✓';
+            } else {
+                steps.item(i).classList.remove('completed');
+                steps.item(i).querySelector('.circle').textContent = i + 1;
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+
+        buttons.forEach(button => {
+        button.addEventListener('click', function(e) { //  'click' or 'mousedown'
+            //  Prevent default behavior if it's a link
+            if (button.tagName === 'A') {
+                e.preventDefault();
+            }
+
+            const numParticles = 20; // Adjust for more/fewer particles
+            const particles = [];
+            const buttonRect = button.getBoundingClientRect();
+            const mouseX = e.clientX - buttonRect.left; // X position relative to button
+            const mouseY = e.clientY - buttonRect.top;  // Y position relative to button
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                document.body.appendChild(particle);  //  Add to the body, *not* the button
+
+                //  Randomize initial particle properties
+                const size = Math.random() * 4 + 2;    // Size between 2 and 6
+                const x = mouseX;
+                const y = mouseY;
+                const directionX = (Math.random() - 0.5) * 3; //  Speed and direction
+                const directionY = (Math.random() - 0.5) * 3;
+                const velocity = Math.random() * 2 + 1;    // Speed
+                const alpha = 1;
+                const color = `hsl(${Math.random() * 360}, 70%, 50%)`; // Random color
+
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = color;
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+                particle.style.opacity = alpha;
+
+                particles.push({
+                    element: particle,
+                    x: x,
+                    y: y,
+                    size: size,
+                    directionX: directionX,
+                    directionY: directionY,
+                    velocity: velocity,
+                    alpha: alpha,
+                    color: color,
+                    decay: 0.02 + Math.random() * 0.03 //  Fade out rate
+                });
+            }
+
+            //  Animation loop for the particles
+            function animateParticles() {
+                particles.forEach(particle => {
+                    particle.x += particle.directionX * particle.velocity;
+                    particle.y += particle.directionY * particle.velocity;
+                    particle.alpha -= particle.decay;
+
+                    particle.element.style.left = `${particle.x}px`;
+                    particle.element.style.top = `${particle.y}px`;
+                    particle.element.style.opacity = particle.alpha;
+
+                    if (particle.alpha <= 0) {
+                        particle.element.remove(); // Remove particle from DOM
+                    }
+                });
+
+                if (particles.length > 0) {
+                    requestAnimationFrame(animateParticles); // Continue animation if particles exist
+                }
+            }
+
+            animateParticles(); // Start the animation
+        });
+    });
+</script>
 {% endblock %}
 

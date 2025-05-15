@@ -6,7 +6,7 @@ users = {}
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' #i guess this is the replacement for jwt_authentication
 
-puzzles = puzzles_with_answers = [
+puzzles = [
     {"puzzle": "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?", "answer": "an echo", "hint": "It repeats"},
     {"puzzle": "What is always coming, but never arrives?", "answer": "tomorrow"},
     {"puzzle": "What has an endless supply but the more you take, the larger it becomes?", "answer": "a hole", "hint": "It's an empty space"},
@@ -33,6 +33,7 @@ def login():
         password = request.form['password']
         if username in users and users[username] == password:
             session['username'] = username 
+            session['correct_count'] = 0 
             flash('Login successful!', 'success')
             #return redirect(url_for('dashboard',name=username))  # Redirect to a logged-in page
             return redirect(url_for('dashboard'))
@@ -67,15 +68,17 @@ def dashboard():
             session['start_time'] = datetime.now() 
         elif 'feedback' in session and "Correct!" in session['feedback']:
             session['start_time'] = datetime.now() 
+
         puzzle_index = session['current_puzzle_index']
         puzzle_data = puzzles[puzzle_index]
         puzzle = puzzle_data["puzzle"]
         correct_answer = puzzle_data["answer"] 
-        hint = puzzle_data["hint"] 
+        #hint = puzzle_data["hint"] 
         session['hint_available'] = True 
         correct_count = session.get('correct_count', 0)
         time_taken = session.pop('time_taken', None) 
         feedback = session.pop('feedback', None)
+        
         print(f"hint_available in dashboard: {session.get('hint_available')}")  # Add this
         return render_template('test.html', name=name, puzzle=puzzle, correct_answer=correct_answer, hint=hint, feedback=feedback, correct_count=correct_count, time_taken=time_taken)
     else: 
@@ -85,6 +88,7 @@ def dashboard():
 def check_answer():
     user_answer = request.form['answer']
     correct_answer = request.form['correct_answer']
+    session['correct_count'] = session.get('correct_count', 0) + 1
 
     if user_answer.lower() == correct_answer.lower():
         end_time = datetime.now()
